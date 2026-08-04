@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Vinyl / Synth Outer Ring -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF00E5FF"
+        android:strokeWidth="3"
+        android:pathData="M54,20 A34,34 0 1,1 53.9,20 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF9D00FF"
+        android:strokeWidth="2"
+        android:pathData="M54,26 A28,28 0 1,1 53.9,26 Z" />
+
+    <!-- Waveform Equalizer bars -->
+    <path android:fillColor="#FF00E5FF" android:pathData="M34,48h4v12h-4z" />
+    <path android:fillColor="#FF00E5FF" android:pathData="M42,42h4v24h-4z" />
+    <path android:fillColor="#FF00E5FF" android:pathData="M50,36h4v36h-4z" />
+    <path android:fillColor="#FFFF007F" android:pathData="M58,40h4v28h-4z" />
+    <path android:fillColor="#FFFF007F" android:pathData="M66,45h4v18h-4z" />
+    <path android:fillColor="#FFFF007F" android:pathData="M70,50h4v8h-4z" />
+
+    <!-- Central Mic Head -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,40 C50.7,40 48,42.7 48,46 L48,54 C48,57.3 50.7,60 54,60 C57.3,60 60,57.3 60,54 L60,46 C60,42.7 57.3,40 54,40 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M44,52 C44,57.5 48.5,62 54,62 C59.5,62 64,57.5 64,52" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M53,62h2v6h-2z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M48,68h12v2h-12z" />
+</vector>
