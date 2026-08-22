@@ -10,6 +10,8 @@ node_modules/
 
 # Production build
 dist/
+build/
+captures/
 
 # Environment variables
 .env
@@ -17,12 +19,20 @@ dist/
 .env.development.local
 .env.test.local
 .env.production.local
+local.properties
 
 # Editor/IDE directories
 .idea/
 .vscode/
 *.iml
+.gradle
+.kotlin
+.externalNativeBuild
+.cxx
 
 # OS files
 .DS_Store
 Thumbs.db
+
+# Misc
+debug.keystore
