@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0C0D12">
 <title>💎 Qamelot Media Studio — QMP</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png?v=2">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="QMP Studio">
 <style>
 :root{
 --bg:#0C0D12;--surf:#161821;--surf2:#202330;--border:#2E3347;--steel:#1E2129;--steelD:#13151A;--steelL:#2B2F3B;--mborder:#3B4152;
@@ -155,6 +162,7 @@ footer{color:var(--sub);text-align:center;font-size:12px;padding:0 16px 30px}
   <div class="tag">QMP · Premastering Beat Workstation</div>
   <p class="sub2">The full Kotlin studio, rebuilt for the web — 8-track step sequencer, synth engine, performance pads, DJ scratch, beatbox-to-beats, AI beat generator, mixer FX and a mastering suite. All synthesized live. No samples, no downloads.</p>
   <button id="enterBtn">▶ &nbsp;ENTER STUDIO</button>
+  <button class="installBtn" style="margin-top:14px;background:#202330;border:1px solid #00E5FF;color:#00E5FF;font-weight:800;font-size:14px;letter-spacing:1px;padding:11px 22px;border-radius:999px">📲 INSTALL APP</button>
   <div class="feat">🎹 HipHop · Pop · RnB &nbsp;•&nbsp; Patterns A–D &nbsp;•&nbsp; 16 / 32 Steps<br>🎛️ ADSR · LFO · Scales · Formants &nbsp;•&nbsp; WAV Bounce + Stems</div>
 </div>
 
@@ -163,6 +171,7 @@ footer{color:var(--sub);text-align:center;font-size:12px;padding:0 16px 30px}
     <div class="gem">💎</div>
     <h1>Qamelot <span>Media Studio</span></h1>
     <div class="proj">
+      <button class="installBtn" style="background:#202330;border:1px solid #00E5FF;color:#00E5FF;font-weight:800;font-size:12.5px;padding:7px 13px;border-radius:999px">📲 INSTALL</button>
       <input id="projName" type="text" value="New Beatbox Session" aria-label="Project name">
       <span class="saveDot" id="saveDot">● autosaved</span>
     </div>
@@ -1021,6 +1030,22 @@ function initBindings(){
  window.addEventListener("resize",positionXyDot);
  console.log("%c💎 Qamelot Media Studio ready","color:#00E5FF;font-weight:bold");
 })();
+
+/* ---------------- PWA INSTALL ---------------- */
+let deferredInstallPrompt=null;
+const isStandalone=window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
+function refreshInstallBtns(){ $$(".installBtn").forEach(b=>{ b.style.display=isStandalone?"none":""; }); }
+window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); deferredInstallPrompt=e; refreshInstallBtns(); });
+window.addEventListener("appinstalled",()=>{ deferredInstallPrompt=null; $$(".installBtn").forEach(b=>b.style.display="none"); toast("💎 QMP Studio installed — check your home screen!"); });
+document.addEventListener("click",async e=>{
+ const btn=e.target.closest(".installBtn"); if(!btn)return;
+ if(deferredInstallPrompt){ deferredInstallPrompt.prompt(); const choice=await deferredInstallPrompt.userChoice; if(choice.outcome==="accepted")toast("📲 Installing QMP Studio…"); deferredInstallPrompt=null; }
+ else{ toast("📲 To install: open the browser menu (⋮) → “Install app” / “Add to Home screen”"); }
+});
+refreshInstallBtns();
+if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
+ window.addEventListener("load",()=>{ navigator.serviceWorker.register("sw.js").catch(err=>console.warn("SW registration failed",err)); });
+}
 </script>
 </body>
 </html>
