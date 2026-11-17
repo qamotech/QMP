@@ -436,7 +436,7 @@ footer{color:var(--sub);text-align:center;font-size:12px;padding:0 16px 30px}
   </div>
   <div class="card">
     <h2>🎛️ Preset Manager</h2>
-    <p class="hint">Built-in factory presets from the Kotlin app plus your own. Presets store synth + mixer + BPM + swing. Export / import as JSON files.</p>
+    <p class="hint">⭐ <b>Starter Pack</b> presets load a complete groove — drums, bass, synth, pads, track sounds + mixer — so the studio sounds good on first open. Factory presets store synth + mixer + BPM + swing. Your own presets save the same way. Export / import as JSON files.</p>
     <div class="row">
       <input type="text" id="presetName" placeholder="My preset name…" style="flex:1;min-width:160px;width:auto">
       <input type="text" id="presetCat" placeholder="Category" style="flex:1;min-width:120px;width:auto">
@@ -495,6 +495,8 @@ const S={
  fx:{eqLow:0,eqLowMid:0,eqMid:0,eqHighMid:0,eqHigh:0,pannerX:0,pannerY:0,reverbWet:0.2,reverbSize:0.5,delayWet:0.15,delayTime:0.25,delayFeedback:0.35,saturatorDrive:0.1,bitcrusherDepth:16,sidechainDucking:0.25,limiterThreshold:-0.5,stereoWidth:1,harmonicExciter:0.2,transientPunch:0.3},
  selStep:null, chordType:"Single", stutter:0, scratchSpeed:1,
 };
+const SYNTH_DEFAULTS=JSON.parse(JSON.stringify(S.synth));
+const FX_DEFAULTS=JSON.parse(JSON.stringify(S.fx));
 let selTrack=5;
 
 /* ---------------- AUDIO GRAPH ---------------- */
@@ -879,15 +881,99 @@ const FACTORY=[
  {name:"Acid Distortion Lab",category:"Factory",bpm:132,swing:0.08,synth:{cutoff:900,resonance:14,pitchScale:"Japanese",wave:"square",lfoRate:6,lfoTarget:"Filter Cutoff",lfoDepth:0.8},fx:{saturatorDrive:0.6,bitcrusherDepth:12,harmonicExciter:0.6}},
  {name:"Clean Acoustic Studio",category:"Factory",bpm:100,swing:0,synth:{cutoff:8000,resonance:0.6,pitchScale:"Major",wave:"triangle"},fx:{eqLow:0,eqMid:0,eqHigh:0,reverbWet:0.12,saturatorDrive:0.02,bitcrusherDepth:16}},
 ];
+/* ---------------- ⭐ STARTER PACK (Upgrade #62) ----------------
+   10 full-groove starter presets: drums + bass + synth + pads + mixer.
+   Pattern rows are 16 steps: X = accent (vel 1.0), x = hit (0.85), o = ghost (0.55), . = rest.
+   pitch = {track:{step:semitone offset from C}}, gate = {track:gate length}. reset:true starts
+   from clean synth/FX defaults so every starter sounds exactly as designed. */
+const STARTER=[
+ {name:"Sunrise Groove",category:"⭐ Starter Pack",reset:true,bpm:93,swing:0.16,
+  pat:{0:"X.....x...X.....",1:"....X.......X...",2:"x.x.x.x.x.x.x.xo",3:"..x...x...x...x.",4:"X.......x.x...x.",5:"..x..x...x...x..",6:"X.......X.......",7:"....o.......o..o"},
+  pitch:{4:{0:0,8:0,10:3,14:7},5:{2:12,5:10,9:8,13:12},6:{0:0,8:-4}}, gate:{4:0.9,6:1.8},
+  sounds:[0,0,2,0,2,2,0,2], vols:[0.85,0.8,0.55,0.45,0.8,0.65,0.55,0.35],
+  synth:{wave:"triangle",cutoff:2200,resonance:1.2,attack:0.01,decay:0.3,sustain:0.5,release:0.6,pitchScale:"Minor"},
+  fx:{eqLow:2,eqHigh:1,reverbWet:0.28,reverbSize:0.55,delayWet:0.12,delayTime:0.32,delayFeedback:0.3,saturatorDrive:0.14,transientPunch:0.35,sidechainDucking:0.35,stereoWidth:1.15,harmonicExciter:0.25,limiterThreshold:-1}},
+ {name:"Midnight Trap 808s",category:"⭐ Starter Pack",reset:true,bpm:140,swing:0.04,
+  pat:{0:"X......x..X.....",1:"....X.......X...",2:"XoxoXoxoXoxoXoxX",3:"...x.......x....",4:"X......x..X...x.",5:"..x..x.....x....",6:"X.......X.......",7:".......o.......X"},
+  pitch:{4:{0:0,7:0,10:-2,14:3},5:{2:15,5:12,11:19},6:{0:0,8:-4}}, gate:{4:1.4,6:2},
+  sounds:[1,0,1,2,0,0,1,1], vols:[0.62,0.6,0.4,0.32,0.6,0.45,0.38,0.28],
+  synth:{wave:"sawtooth",cutoff:3400,resonance:3,attack:0.01,release:0.5,pitchScale:"Minor"},
+  fx:{eqLow:5,transientPunch:0.45,sidechainDucking:0.55,saturatorDrive:0.22,reverbWet:0.18,delayWet:0.1,limiterThreshold:-1.5,harmonicExciter:0.3,stereoWidth:1.2}},
+ {name:"Velvet R&B Keys",category:"⭐ Starter Pack",reset:true,bpm:86,swing:0.2,
+  pat:{0:"X......o..X.....",1:"....X.......X...",2:"x.x.x.x.x.x.x.xo",3:"..x...x...x...x.",4:"X..x....x..x....",5:".x....x..x....x.",6:"X...X...X...X...",7:"o...........o..."},
+  pitch:{4:{0:0,3:0,8:-4,11:3},5:{1:12,6:15,9:19,14:17},6:{0:0,4:-4,8:3,12:-2}}, gate:{4:0.9,6:1.6},
+  sounds:[0,1,0,0,2,2,0,0], vols:[0.8,0.75,0.45,0.4,0.75,0.65,0.6,0.28],
+  synth:{wave:"triangle",cutoff:1800,resonance:1,attack:0.06,decay:0.4,sustain:0.55,release:0.9,pitchScale:"Dorian"},
+  fx:{reverbWet:0.42,reverbSize:0.7,delayWet:0.22,delayTime:0.375,delayFeedback:0.42,saturatorDrive:0.06,stereoWidth:1.25,sidechainDucking:0.25,transientPunch:0.3,harmonicExciter:0.2}},
+ {name:"House Four Floor",category:"⭐ Starter Pack",reset:true,bpm:124,swing:0.06,
+  pat:{0:"X...X...X...X...",1:"....X.......X...",2:"..X...X...X...Xo",3:".o.o.o.o.o.o.o.o",4:"..X...X...X...X.",5:"...x......x.....",6:"X.......X.......",7:".....o.......o.."},
+  pitch:{4:{2:0,6:0,10:-4,14:3},5:{3:12,10:12},6:{0:0,8:-4}}, gate:{4:0.8,5:0.5,6:2},
+  sounds:[0,1,1,0,1,1,1,1], vols:[0.85,0.75,0.55,0.45,0.75,0.6,0.5,0.28],
+  synth:{wave:"square",cutoff:2800,resonance:4,attack:0.01,decay:0.2,sustain:0.4,release:0.35,pitchScale:"Minor"},
+  fx:{sidechainDucking:0.5,transientPunch:0.4,reverbWet:0.22,delayWet:0.18,delayTime:0.363,delayFeedback:0.4,stereoWidth:1.3,eqLow:3,harmonicExciter:0.35,limiterThreshold:-1}},
+ {name:"Lo-Fi Dust Tape",category:"⭐ Starter Pack",reset:true,bpm:78,swing:0.26,
+  pat:{0:"X......x...x....",1:"....X.......X...",2:"x.o.x.o.x.o.x.o.",3:"..............o.",4:"X.......x..x....",5:".x..x....x..x...",6:"X.......X.......",7:"...............o"},
+  pitch:{4:{0:0,8:3,11:-4},5:{1:19,4:17,9:15,12:12},6:{0:0,8:8}}, gate:{4:0.9,6:2},
+  sounds:[2,0,2,2,2,2,0,2], vols:[0.9,0.8,0.55,0.4,0.85,0.7,0.65,0.3],
+  synth:{wave:"triangle",cutoff:1300,resonance:0.8,attack:0.03,decay:0.35,sustain:0.5,release:0.8,pitchScale:"Pentatonic"},
+  fx:{bitcrusherDepth:10,saturatorDrive:0.3,eqHigh:-4,eqLow:1.5,reverbWet:0.3,reverbSize:0.6,delayWet:0.14,delayTime:0.38,delayFeedback:0.35,stereoWidth:1.05,sidechainDucking:0.2,transientPunch:0.3,limiterThreshold:-1}},
+ {name:"Cyber Night Drive",category:"⭐ Starter Pack",reset:true,bpm:104,swing:0,
+  pat:{0:"X...X...X...X...",1:"....X.......X...",2:"x.x.x.x.x.x.x.x.",3:"...x..x....x..x.",4:"x.x.x.x.x.x.x.x.",5:"x..x..x..x..x.x.",6:"X...............",7:"...............x"},
+  pitch:{4:{0:0,2:0,4:0,6:0,8:-4,10:-4,12:3,14:3},5:{0:12,3:15,6:19,9:15,12:12,14:10},6:{0:0}}, gate:{4:0.7,6:2.2},
+  sounds:[0,1,1,1,1,0,2,1], vols:[0.7,0.65,0.42,0.38,0.55,0.5,0.4,0.24],
+  synth:{wave:"sawtooth",cutoff:5200,resonance:6,lfoRate:0.4,lfoDepth:0.35,lfoTarget:"Filter Cutoff",attack:0.01,release:0.5,pitchScale:"Minor"},
+  fx:{delayWet:0.32,delayTime:0.29,delayFeedback:0.48,reverbWet:0.34,reverbSize:0.6,stereoWidth:1.5,harmonicExciter:0.45,eqHigh:2.5,sidechainDucking:0.35,saturatorDrive:0.18,transientPunch:0.3}},
+ {name:"Cathedral Ambient",category:"⭐ Starter Pack",reset:true,bpm:72,swing:0,
+  pat:{0:"x.......x.......",3:".......o......o.",4:"x.......x.......",5:"....x......x....",6:"X.......X......."},
+  pitch:{4:{0:0,8:-4},5:{4:12,11:19},6:{0:0,8:8}}, gate:{4:2,6:2.4},
+  sounds:[1,0,0,1,0,2,2,0], vols:[0.65,0.5,0.4,0.32,0.7,0.5,0.7,0.3],
+  synth:{wave:"sine",cutoff:2400,resonance:0.8,attack:0.45,decay:0.6,sustain:0.7,release:1.8,pitchScale:"Major"},
+  fx:{reverbWet:0.65,reverbSize:0.95,delayWet:0.3,delayTime:0.5,delayFeedback:0.5,stereoWidth:1.7,saturatorDrive:0.04,eqHigh:1,sidechainDucking:0.1,transientPunch:0.15,limiterThreshold:-1}},
+ {name:"Acid Lab 303",category:"⭐ Starter Pack",reset:true,bpm:132,swing:0.08,
+  pat:{0:"X...X...X...X...",1:"....X.......X...",2:"..X...X...X...Xo",3:"..x......x......",4:"x.xx.x.xxx.x.x.x",5:"......x......x..",6:"o...............",7:"....o.......o..."},
+  pitch:{4:{0:0,2:12,3:0,5:3,7:0,8:0,10:10,12:0,14:15},5:{6:24,13:22},6:{0:0}}, gate:{4:0.6,6:2},
+  sounds:[0,2,1,2,1,1,1,2], vols:[0.85,0.75,0.55,0.4,0.72,0.5,0.38,0.28],
+  synth:{wave:"square",cutoff:950,resonance:11,lfoRate:6,lfoDepth:0.35,lfoShape:"Saw",lfoTarget:"Filter Cutoff",attack:0.005,decay:0.18,sustain:0.35,release:0.25,pitchScale:"Japanese"},
+  fx:{saturatorDrive:0.55,bitcrusherDepth:12,harmonicExciter:0.55,reverbWet:0.16,delayWet:0.2,delayTime:0.227,delayFeedback:0.45,sidechainDucking:0.45,eqHigh:2,transientPunch:0.4,limiterThreshold:-1.5}},
+ {name:"Stadium Pop Anthem",category:"⭐ Starter Pack",reset:true,bpm:118,swing:0.02,
+  pat:{0:"X...X...X...X.x.",1:"....X.......X...",2:"x.x.x.x.x.x.x.x.",3:".o.o.o.o.o.o.o.o",4:"X...X...X...X...",5:"x.x.x..x.x..x...",6:"X.......X.......",7:"o.......o......."},
+  pitch:{4:{0:0,4:0,8:-4,12:-2},5:{0:12,2:16,4:19,7:16,9:21,12:19},6:{0:0,8:-4}}, gate:{4:0.9,6:2},
+  sounds:[0,1,0,0,2,0,0,0], vols:[0.75,0.75,0.48,0.38,0.65,0.58,0.45,0.26],
+  synth:{wave:"sawtooth",cutoff:6500,resonance:1.2,attack:0.01,decay:0.3,sustain:0.55,release:0.5,pitchScale:"Major"},
+  fx:{eqHigh:3.5,eqHighMid:2,harmonicExciter:0.5,reverbWet:0.25,reverbSize:0.55,stereoWidth:1.35,transientPunch:0.4,sidechainDucking:0.4,delayWet:0.12,delayTime:0.25,delayFeedback:0.3,saturatorDrive:0.12,limiterThreshold:-1}},
+ {name:"Dub Wobble Yard",category:"⭐ Starter Pack",reset:true,bpm:140,swing:0.05,
+  pat:{0:"X.........X.....",1:"........X.......",2:"..x.x.x....x..x.",3:"...x.........x..",4:"X..x..x...X.X...",5:".......x.......x",6:"X...............",7:"........x......."},
+  pitch:{4:{0:0,3:0,6:-2,10:1,12:0},5:{7:12,15:10},6:{0:-4}}, gate:{4:1.2,6:2},
+  sounds:[1,0,1,1,1,1,1,2], vols:[0.7,0.75,0.42,0.38,0.65,0.5,0.42,0.3],
+  synth:{wave:"sawtooth",cutoff:2600,resonance:8,lfoRate:7,lfoDepth:0.4,lfoTarget:"Filter Cutoff",attack:0.01,decay:0.3,sustain:0.6,release:0.45,pitchScale:"Minor"},
+  fx:{eqLow:5.5,saturatorDrive:0.35,sidechainDucking:0.5,transientPunch:0.45,reverbWet:0.2,delayWet:0.16,delayTime:0.214,delayFeedback:0.4,limiterThreshold:-2,harmonicExciter:0.3,stereoWidth:1.25}},
+];
+function buildPatternFromSpec(spec){ const p=mkPattern(); if(!spec||!spec.pat)return p;
+ const VEL={X:1,x:0.85,o:0.55};
+ for(const[ti,row]of Object.entries(spec.pat)){ const t=+ti; if(t<0||t>7||typeof row!=="string")continue;
+  [...row].forEach((ch,s)=>{ if(s>=32)return; const v=VEL[ch]; if(!v)return; const st=p[t][s]; st.active=true; st.velocity=v;
+   const po=spec.pitch&&spec.pitch[t]?spec.pitch[t][s]:undefined; if(po!=null)st.pitchOffset=po;
+   if(spec.gate&&spec.gate[t])st.gateLength=spec.gate[t]; }); }
+ return p; }
 function getPresets(){ let u=[]; try{u=JSON.parse(localStorage.getItem(LS.presets)||"[]");}catch(_){}
- return FACTORY.map((f,i)=>({...f,id:"f"+i,factory:true})).concat(u); }
-function applyPreset(p){ if(p.synth)Object.assign(S.synth,JSON.parse(JSON.stringify(p.synth))); if(p.fx)Object.assign(S.fx,JSON.parse(JSON.stringify(p.fx)));
+ return FACTORY.map((f,i)=>({...f,id:"f"+i,factory:true}))
+  .concat(STARTER.map((f,i)=>({...f,id:"s"+i,factory:true,starter:true}))).concat(u); }
+function applyPreset(p,quiet){ if(p.reset){ S.synth=JSON.parse(JSON.stringify(SYNTH_DEFAULTS)); S.fx=JSON.parse(JSON.stringify(FX_DEFAULTS)); }
+ if(p.synth)Object.assign(S.synth,JSON.parse(JSON.stringify(p.synth))); if(p.fx)Object.assign(S.fx,JSON.parse(JSON.stringify(p.fx)));
  if(p.bpm){S.bpm=clamp(p.bpm,40,240);} if(p.swing!=null)S.swing=clamp(p.swing,0,0.5);
- syncAllUI(); if(AC)applyFx(); scheduleSave(); toast(`🎛️ Preset loaded: ${p.name}`); }
+ if(p.sounds)p.sounds.forEach((v,i)=>{ if(v!=null&&S.tracks[i])S.tracks[i].sound=v; });
+ if(p.vols)p.vols.forEach((v,i)=>{ if(v!=null&&S.tracks[i])S.tracks[i].volume=v; });
+ if(p.pans)p.pans.forEach((v,i)=>{ if(v!=null&&S.tracks[i])S.tracks[i].pan=v; });
+ if(p.pat){ S.patterns[S.pattern]=buildPatternFromSpec(p); S.stepsCount=16; S.selStep=null; }
+ syncAllUI(); buildSequencer();
+ $$("#soundLib select").forEach((sel,i)=>{ if(S.tracks[i])sel.value=S.tracks[i].sound; });
+ if(window._mk){ window._mk.lim._set(S.fx.limiterThreshold); window._mk.exc._set(S.fx.harmonicExciter); window._mk.punch._set(S.fx.transientPunch); window._mk.width._set(S.fx.stereoWidth); window._mk.sat._set(S.fx.saturatorDrive); window._mk.duck._set(S.fx.sidechainDucking); }
+ if(AC){ applyFx(); trackGains.forEach((g,i)=>{ g.gain.value=S.tracks[i].volume; }); trackPans.forEach((pn,i)=>{ pn.pan.value=S.tracks[i].pan; }); }
+ scheduleSave(); if(!quiet)toast(`🎛️ Preset loaded: ${p.name}`); }
 function renderPresets(){
  const list=$("#presetList"); list.innerHTML="";
  getPresets().forEach(p=>{ const d=document.createElement("div"); d.className="listItem";
-  d.innerHTML=`<span class="nm">${p.name}</span><span class="cat">${p.category||"Custom"} · ${p.bpm||""} BPM</span>`;
+  d.innerHTML=`<span class="nm">${p.name}</span><span class="cat">${p.category||"Custom"}${p.pat?" · 🥁+🎹 full groove":""} · ${p.bpm||""} BPM</span>`;
   const load=document.createElement("button"); load.className="btn cyan"; load.textContent="Load"; load.addEventListener("click",()=>applyPreset(p)); d.appendChild(load);
   const exp=document.createElement("button"); exp.className="btn"; exp.textContent="Export"; exp.addEventListener("click",()=>download(`${p.name.replace(/\W+/g,"_")}.json`,JSON.stringify(p,null,2),"application/json")); d.appendChild(exp);
   if(!p.factory){ const del=document.createElement("button"); del.className="btn danger"; del.textContent="Delete"; del.addEventListener("click",()=>{ let u=JSON.parse(localStorage.getItem(LS.presets)||"[]"); u=u.filter(x=>x.id!==p.id); localStorage.setItem(LS.presets,JSON.stringify(u)); renderPresets(); }); d.appendChild(del); }
@@ -998,6 +1084,7 @@ function initBindings(){
  const kSat=makeKnob("Saturation",0,1,S.fx.saturatorDrive,v=>Math.round(v*100)+"%",v=>{S.fx.saturatorDrive=v;$("#sat").value=v;$("#satV").textContent=v.toFixed(2);fxAfter();scheduleSave();});
  const kDuck=makeKnob("Ducking",0,1,S.fx.sidechainDucking,v=>Math.round(v*100)+"%",v=>{S.fx.sidechainDucking=v;$("#duck").value=v;$("#duckV").textContent=v.toFixed(2);scheduleSave();});
  [kLim,kExc,kPunch,kWidth,kSat,kDuck].forEach(k=>kr.appendChild(k));
+ window._mk={lim:kLim,exc:kExc,punch:kPunch,width:kWidth,sat:kSat,duck:kDuck};
  $("#bounceMasterBtn").addEventListener("click",()=>bounce(false));
  $("#bounceStemsBtn").addEventListener("click",()=>bounce(true));
  // AI
@@ -1024,8 +1111,10 @@ function initBindings(){
 
 /* ---------------- INIT ---------------- */
 (function init(){
- try{ const saved=localStorage.getItem(LS.auto); if(saved){ const s=JSON.parse(saved); if(s&&s.patterns)restore(s); } }catch(_){}
+ let hadSave=false;
+ try{ const saved=localStorage.getItem(LS.auto); if(saved){ const s=JSON.parse(saved); if(s&&s.patterns){ restore(s); hadSave=true; } } }catch(_){}
  buildSequencer(); buildPads(); initBindings(); initScratch(); initBeatbox(); renderPresets(); syncAllUI();
+ if(!hadSave)applyPreset({...STARTER[0],id:"s0",factory:true,starter:true},true); // first open starts on the flagship starter groove
  selectStep(5,0);
  window.addEventListener("resize",positionXyDot);
  console.log("%c💎 Qamelot Media Studio ready","color:#00E5FF;font-weight:bold");
