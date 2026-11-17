@@ -1,5 +1,5 @@
 /* Qamelot Media Studio — service worker (offline shell + installability) */
-const CACHE = "qmp-studio-v2";
+const CACHE = "qmp-studio-v3";
 const ASSETS = [
   "./",
   "./index.html",
